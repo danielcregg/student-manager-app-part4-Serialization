@@ -1,4 +1,4 @@
-package ie.atu.mypackage;
+package ie.gmit.studentmanagerpackage;
 
 import java.io.Serializable;
 

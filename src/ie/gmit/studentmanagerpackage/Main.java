@@ -1,4 +1,4 @@
-package ie.atu.mypackage;
+package ie.gmit.studentmanagerpackage;
 
 public class Main {
     public static void main(String[] args) {

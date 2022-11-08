@@ -1,0 +1,24 @@
+{
+    "workbench.colorTheme": "Default Dark+",
+    "code-runner.clearPreviousOutput": true,
+    "code-runner.enableAppInsights": false,
+    "code-runner.fileDirectoryAsCwd": true,
+    "code-runner.ignoreSelection": true,
+    "code-runner.runInTerminal": true,
+    "code-runner.saveFileBeforeRun": true,
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "editor.fontSize": 18,
+    "java.server.launchMode" : "Standard",
+    "java.debug.settings.console": "integratedTerminal",
+    "files.exclude": {
+        ".github": false, 
+        ".devcontainer": false,
+        "**/*.class": true,
+        ".classpath": true,
+        "bin": false,
+        "docs": false,
+        ".gitignore": true,
+        ".vscode": false,
+        "**/*.gitpod*": false,
+      }
+}
