@@ -40,7 +40,7 @@ public class Main extends Application {
 		TextField tfStudentSurname = new TextField();
 		tfStudentSurname.setPromptText("Surname");
 		TextField tfStudentAge = new TextField();
-		tfStudentAge.setPromptText("Year of Study");
+		tfStudentAge.setPromptText("Age");
 		// Delete Student
 		Button btnDelStudent = new Button("Delete Student");
 		TextField tfStudentDel = new TextField();
