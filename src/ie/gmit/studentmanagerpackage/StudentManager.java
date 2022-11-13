@@ -1,33 +1,18 @@
-package ie.gmit.studentmanagerpackage;
+package ie.atu.studentmanagerpackage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.io.Serializable;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentManager implements Serializable {
+public class StudentManager {
 
-	/*
-	 * serialVersionUID is used to ensure that the same class is being used when
-	 * deserializing an object
-	 */
-	public static final long serialVersionUID = 1L;
-
-	// Instance Variables
+// Instance Variables
 	private List<Student> studentList;
 
 	// Constructor
@@ -276,88 +261,5 @@ public class StudentManager implements Serializable {
 				ioExc.printStackTrace();
 			} // End catchEnd catch
 		} // End finally
-	} // End Save method
-
-	// Method to serialize the Student Manager Object
-	public void writeStudentManagerObjectToFile(String pathToFile) {
-
-		File studentManagerObjectByteFile = null;
-		FileOutputStream fosToStudentManagerObjectByteFile = null;
-		ObjectOutputStream oosToStudentManagerObjectByteFile = null;
-
-		try {
-			studentManagerObjectByteFile = new File(pathToFile);
-			fosToStudentManagerObjectByteFile = new FileOutputStream(studentManagerObjectByteFile);
-			oosToStudentManagerObjectByteFile = new ObjectOutputStream(fosToStudentManagerObjectByteFile);
-			oosToStudentManagerObjectByteFile.writeObject(this);
-		} catch (NullPointerException npExc) {
-			npExc.printStackTrace();
-		} catch (FileNotFoundException fnfExc) {
-			fnfExc.printStackTrace();
-		} catch (SecurityException secExc) {
-			secExc.printStackTrace();
-		} catch (InvalidClassException icExc) {
-			icExc.printStackTrace();
-		} catch (NotSerializableException nsExc) {
-			nsExc.printStackTrace();
-		} catch (IOException IOExc) {
-			IOExc.printStackTrace();
-		} finally {
-			try {
-				// Close ObjectOutputStream
-				oosToStudentManagerObjectByteFile.close();
-				// Close FileOutputStream
-				fosToStudentManagerObjectByteFile.close();
-			} catch (NullPointerException npExc) {
-				System.out.println("ERROR: Could not close the ObjectOutputStream or FileOutputStream!");
-				npExc.printStackTrace();
-			} catch (IOException ioExc) {
-				ioExc.printStackTrace();
-			} // End catch
-		} // End finally
 	}
-
-	// Method to de-serialize the Student Manager Object
-	public StudentManager readStudentManagerObjectFromFile(String pathToFile) {
-		File studentManagerObjectByteFile = null;
-		FileInputStream fisFromStudentManagerObjectByteFile = null;
-		ObjectInputStream oisFromStudentManagerObjectByteFile = null;
-		StudentManager studentManagerObjectReadIn = null; // Create empty StudentManager object to store read in object
-
-		try {
-			studentManagerObjectByteFile = new File(pathToFile);
-			fisFromStudentManagerObjectByteFile = new FileInputStream(studentManagerObjectByteFile);
-			oisFromStudentManagerObjectByteFile = new ObjectInputStream(fisFromStudentManagerObjectByteFile);
-			studentManagerObjectReadIn = (StudentManager) oisFromStudentManagerObjectByteFile.readObject();
-		} catch (NullPointerException npExc) {
-			npExc.printStackTrace();
-		} catch (FileNotFoundException fnfExc) {
-			fnfExc.printStackTrace();
-		} catch (SecurityException secExc) {
-			secExc.printStackTrace();
-		} catch (StreamCorruptedException scExc) {
-			scExc.printStackTrace();
-		} catch (InvalidClassException icExc) {
-			icExc.printStackTrace();
-		} catch (OptionalDataException odExc) {
-			odExc.printStackTrace();
-		} catch (IOException IOExc) {
-			IOExc.printStackTrace();
-		} catch (ClassNotFoundException cnfExc) {
-			cnfExc.printStackTrace();
-		} finally {
-			try {
-				// Close ObjectOutputStream
-				oisFromStudentManagerObjectByteFile.close();
-				// Close FileOutputStream
-				fisFromStudentManagerObjectByteFile.close();
-			} catch (NullPointerException npExc) {
-				System.out.println("ERROR: Could not close the ObjectOutputStream or FileOutputStream!");
-				npExc.printStackTrace();
-			} catch (IOException ioExc) {
-				ioExc.printStackTrace();
-			} // End catch
-		} // End finally
-		return studentManagerObjectReadIn; // Returns null if no object is read in.
-	}
-}// End class
+} // End Class
