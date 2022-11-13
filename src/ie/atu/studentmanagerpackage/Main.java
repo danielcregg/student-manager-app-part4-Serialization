@@ -1,6 +1,5 @@
 package ie.atu.studentmanagerpackage;
 
-import java.io.File;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -40,8 +39,8 @@ public class Main extends Application {
 		tfStudentFirstName.setPromptText("First Name");
 		TextField tfStudentSurname = new TextField();
 		tfStudentSurname.setPromptText("Surname");
-		TextField tfStudentYearOfStudy = new TextField();
-		tfStudentYearOfStudy.setPromptText("Year of Study");
+		TextField tfStudentAge = new TextField();
+		tfStudentAge.setPromptText("Year of Study");
 		// Delete Student
 		Button btnDelStudent = new Button("Delete Student");
 		TextField tfStudentDel = new TextField();
@@ -66,8 +65,7 @@ public class Main extends Application {
 		gridPane1.add(btnAddStudent, 0, 2);
 		gridPane1.add(tfStudentID, 1, 2);
 		gridPane1.add(tfStudentFirstName, 2, 2);
-		gridPane1.add(tfStudentSurname, 3, 2);
-		gridPane1.add(tfStudentYearOfStudy, 4, 2);
+		gridPane1.add(tfStudentAge, 3, 2);
 		gridPane1.add(btnDelStudent, 0, 3);
 		gridPane1.add(tfStudentDel, 1, 3);
 		gridPane1.add(btnShowTotal, 0, 4);
@@ -85,10 +83,9 @@ public class Main extends Application {
 				taMyOutput.setText("Please enter path to Student file.\n");
 			} else {
 				// File studentCSVFile = new File(".\\resources\\students.csv");
-				File studentObjectsFile = new File(tfLoadStudentFilePath.getText());
 				// sm.loadStudentsFromCSVFile(studentCSVFile);
 				// sm.saveStudentManagerObjectToFile(studentObjectsFile);
-				sm = sm.loadStudentManagerObjectFromFile(studentObjectsFile);
+				sm = sm.readStudentManagerObjectFromFile(tfLoadStudentFilePath.getText());
 				if (sm == null) {
 					taMyOutput.setText("ERROR: DB path " + tfLoadStudentFilePath.getText() + " does not exist\n");
 					taMyOutput.appendText("Please check DB path and try again");
@@ -109,24 +106,19 @@ public class Main extends Application {
 
 			// If any of the Student fields are empty print prompt message
 			if (tfStudentID.getText().trim().equals("") || tfStudentFirstName.getText().trim().equals("")
-					|| tfStudentSurname.getText().trim().equals("")
-					|| tfStudentYearOfStudy.getText().trim().equals("")) {
+					|| tfStudentAge.getText().trim().equals("")) {
 				taMyOutput.setText("Please enter ALL Student details\n");
 			} else {
 				// Create new Student with information in text fields
 				try {
-					Student newStudent = new Student(tfStudentID.getText(), tfStudentFirstName.getText(),
-							tfStudentSurname.getText(), Integer.parseInt(tfStudentYearOfStudy.getText()));
-					this.sm.addStudent(newStudent); // Add student to student list
+					this.sm.addStudentToList(tfStudentID.getText(), tfStudentFirstName.getText(), Integer.parseInt(tfStudentAge.getText()));
 					// Print success message
-					taMyOutput.setText(newStudent.getFirstName() + " " + newStudent.getSurname()
-							+ " has been added to the student list");
+					taMyOutput.setText(tfStudentID.getText().trim().equals("") + " has been added to the student list");
 
 					// Clear input fields
 					tfStudentID.clear();
 					tfStudentFirstName.clear();
-					tfStudentSurname.clear();
-					tfStudentYearOfStudy.clear();
+					tfStudentAge.clear();
 				} catch (NumberFormatException ex) {
 					ex.printStackTrace();
 					taMyOutput.setText("Please enter a number for Student Year of Study");
@@ -142,11 +134,10 @@ public class Main extends Application {
 			if (tfStudentDel.getText().trim().equals("")) { // If text field is empty
 				taMyOutput.setText("Please enter the Student Number you want to delete");
 			} else {
-				Student removedStudent;
-				removedStudent = sm.deleteStudentByNumber(Integer.parseInt(tfStudentDel.getText()));
-				if (removedStudent != null) {
-					taMyOutput.setText(removedStudent.getFirstName() + " " + removedStudent.getSurname()
-							+ " has been removed from the student list!");
+				boolean success;
+				success = sm.removeStudentFromList(tfStudentDel.getText());
+				if (success != false) {
+					taMyOutput.setText(" has been removed from the student list!");
 					tfStudentDel.clear();
 				} else {
 					taMyOutput.setText("Student " + tfStudentDel.getText() + " not found\n");
@@ -154,24 +145,19 @@ public class Main extends Application {
 					tfStudentDel.clear();
 				}
 			}
-
 		});
 
 		// Show total number of students
 		btnShowTotal.setOnAction(e -> {
-
 			int totalStudents = 0;
 			// Find total Students
-			totalStudents = sm.findTotalStudents();
+			totalStudents = sm.getStudentList().size();
 			taMyOutput.setText("Current Total Students: " + Integer.toString(totalStudents));
-
 		});
 
 		// Show list of students
 		btnShowStudentList.setOnAction(e -> {
-
 			taMyOutput.setText(sm.listAllStudnets());
-
 		});
 
 		btnSaveStudentList.setOnAction(e -> {
@@ -179,9 +165,8 @@ public class Main extends Application {
 			if (tfSaveStudentFilePath.getText().trim().equals("")) { // If text field is empty
 				taMyOutput.setText("Please enter path to Student List.\n");
 			} else {
-				File studentListFile = new File(tfSaveStudentFilePath.getText());
 				try {
-					sm.saveStudentManagerObjectToFile(studentListFile);
+					sm.writeStudentManagerObjectToFile(tfSaveStudentFilePath.getText());
 					taMyOutput.setText("Student list saved!");
 					tfSaveStudentFilePath.clear();
 				} catch (Exception exception) {

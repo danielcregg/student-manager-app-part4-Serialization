@@ -1,4 +1,4 @@
-package ie.gmit.studentmanagerpackage;
+package ie.atu.studentmanagerpackage;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

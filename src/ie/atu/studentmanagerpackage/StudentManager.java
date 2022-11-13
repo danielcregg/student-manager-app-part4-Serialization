@@ -1,4 +1,4 @@
-package ie.gmit.studentmanagerpackage;
+package ie.atu.studentmanagerpackage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -183,6 +183,26 @@ public class StudentManager implements Serializable {
 			System.out.println(studentObject.toString());
 		}
 		System.out.println("========================");
+	}
+
+	public String listAllStudnets() {
+		// Create a StringBuilder object
+		StringBuilder sb = new StringBuilder();
+		int counter = 1;
+
+		sb.append(String.format("%-20s%-20s%-20s%-20s%-20s\n", "No.", "ID", "Name", "Surname", "Year Of Study"));
+		sb.append(String.format("===============================================================\n"));
+
+		// sb.append("No.\tID\t\t\t\tName\t\t\tSurname\t\t\tYear of Study\n");
+		// sb.append("----------------------------------------------------------\n");
+		for (Student student : this.studentList) {
+			sb.append(counter + ": " + student.findAllFieldValuesInCSVFormat().replace(",", "\t\t") + "\n");
+			// sb.append(String.format("%-20s%-20\n",counter,
+			// student.findAllFieldValuesInCSVFormat().replace(",", "\t\t") + "\n"));
+			counter++;
+		}
+
+		return sb.toString();
 	}
 
 	// Read student details from file
