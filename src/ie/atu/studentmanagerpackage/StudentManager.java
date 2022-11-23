@@ -25,7 +25,7 @@ public class StudentManager implements Serializable {
 	 * serialVersionUID is used to ensure that the same class is being used when
 	 * deserializing an object
 	 */
-	public static final long serialVersionUID = 1L;
+	public static final long serialVersionUID = 2L;
 
 	// Instance Variables
 	private List<Student> studentList;
