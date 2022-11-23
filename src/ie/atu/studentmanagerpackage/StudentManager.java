@@ -1,4 +1,4 @@
-package ie.gmit.studentmanagerpackage;
+package ie.atu.studentmanagerpackage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
