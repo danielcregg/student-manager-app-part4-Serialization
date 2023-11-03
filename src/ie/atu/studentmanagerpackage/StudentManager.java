@@ -144,13 +144,16 @@ public class StudentManager implements Serializable {
 
 	// Update student name
 	public boolean updateStudentName(String studentId, String newName) {
-		// Validate the student ID and new name using the static methods in the Student class
+		// Validate the student ID and new name using the static methods in the Student
+		// class
 		if (!Student.studentIdIsValid(studentId) || !Student.firstNameIsValid(newName)) {
-			// If either the student ID or the new name is invalid, throw an IllegalArgumentException
+			// If either the student ID or the new name is invalid, throw an
+			// IllegalArgumentException
 			throw new IllegalArgumentException("Invalid student ID or name");
 		}
 
-		// If both the student ID and the new name are valid, find the student with the given ID
+		// If both the student ID and the new name are valid, find the student with the
+		// given ID
 		Student studentToUpdate = findStudentObjectByID(studentId);
 
 		// If a student with the given ID is not found...
@@ -254,7 +257,8 @@ public class StudentManager implements Serializable {
 			}
 			System.out.println("Student data read from CSV file located at " + pathToStudentCSVFile);
 		} catch (IOException e) {
-			System.err.println("ERROR: An error occurred while reading the student data from the file: " + e.getMessage());
+			System.err.println(
+					"ERROR: An error occurred while reading the student data from the file: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
