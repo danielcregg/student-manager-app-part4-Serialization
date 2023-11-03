@@ -4,10 +4,11 @@ import java.io.Serializable;
 
 public class Student implements Serializable {
 
-	/*
-	 * serialVersionUID is used to ensure that the same class is being used when
-	 * deserializing an object
-	 */
+	// serialVersionUID is used for version control of a Serializable class to
+	// verify that the sender and receiver of a serialized object have loaded.
+	// If the receiver has loaded a class for the object that has a different
+	// serialVersionUID than that of the corresponding sender's class, then
+	// deserialization will result in an InvalidClassException.
 	public static final long serialVersionUID = 1L;
 
 	// Instance Variables
@@ -36,21 +37,27 @@ public class Student implements Serializable {
 	}
 
 	public void setStudentId(String studentId) {
-		if (studentIdIsValid(studentId)) {
-			this.studentId = studentId;
+		// Check if student ID is not valid	and throw exception if it is.
+		if (!studentIdIsValid(studentId)) {
+			throw new IllegalArgumentException("Invalid student ID");
 		}
+		this.studentId = studentId;
 	}
 
-	public void setFirstName(String name) {
-		if (firstNameIsValid(name)) {
-			this.firstName = name;
+	public void setFirstName(String firstName) {
+		// Check if student ID is not valid	and throw exception if it is.
+		if (!firstNameIsValid(firstName)) {
+			throw new IllegalArgumentException("Invalid first name");
 		}
+		this.firstName = firstName;
 	}
-
+	
 	public void setAge(int age) {
-		if (ageIsValid(age)) {
-			this.age = age;
+		// Check if student ID is not valid	and throw exception if it is.
+		if (!ageIsValid(age)) {
+			throw new IllegalArgumentException("Invalid age");
 		}
+		this.age = age;
 	}
 
 	// Check if student ID is valid
