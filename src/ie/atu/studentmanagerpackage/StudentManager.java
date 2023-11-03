@@ -280,18 +280,20 @@ public class StudentManager implements Serializable {
 
 	// Method to serialize the Student Manager Object
 	public void writeStudentManagerObjectToFile(String pathToFile) {
-
-		File studentManagerObjectByteFile = null;
-		FileOutputStream fosToStudentManagerObjectByteFile = null;
-		ObjectOutputStream oosToStudentManagerObjectByteFile = null;
+		File studentManagerObjectFile = null;
+		FileOutputStream fileOutputStreamToStudentManagerObjectFile = null;
+		ObjectOutputStream objectOutputStreamToStudentManagerObjectFile = null;
 
 		try {
-			studentManagerObjectByteFile = new File(pathToFile);
-			fosToStudentManagerObjectByteFile = new FileOutputStream(studentManagerObjectByteFile);
-			oosToStudentManagerObjectByteFile = new ObjectOutputStream(fosToStudentManagerObjectByteFile);
-			oosToStudentManagerObjectByteFile.writeObject(this);
-		} catch (NullPointerException npExc) {
-			npExc.printStackTrace();
+			// Create file object
+			studentManagerObjectFile = new File(pathToFile);
+			// Create file output stream from file object
+			fileOutputStreamToStudentManagerObjectFile = new FileOutputStream(studentManagerObjectFile);
+			// Create object output stream from file output stream
+			objectOutputStreamToStudentManagerObjectFile = new ObjectOutputStream(
+					fileOutputStreamToStudentManagerObjectFile);
+			// Write object to file
+			objectOutputStreamToStudentManagerObjectFile.writeObject(this);
 		} catch (FileNotFoundException fnfExc) {
 			fnfExc.printStackTrace();
 		} catch (SecurityException secExc) {
@@ -305,9 +307,9 @@ public class StudentManager implements Serializable {
 		} finally {
 			try {
 				// Close ObjectOutputStream
-				oosToStudentManagerObjectByteFile.close();
+				objectOutputStreamToStudentManagerObjectFile.close();
 				// Close FileOutputStream
-				fosToStudentManagerObjectByteFile.close();
+				fileOutputStreamToStudentManagerObjectFile.close();
 			} catch (NullPointerException npExc) {
 				System.out.println("ERROR: Could not close the ObjectOutputStream or FileOutputStream!");
 				npExc.printStackTrace();
@@ -319,46 +321,20 @@ public class StudentManager implements Serializable {
 
 	// Method to de-serialize the Student Manager Object
 	public StudentManager readStudentManagerObjectFromFile(String pathToFile) {
-		File studentManagerObjectByteFile = null;
-		FileInputStream fisFromStudentManagerObjectByteFile = null;
-		ObjectInputStream oisFromStudentManagerObjectByteFile = null;
-		StudentManager studentManagerObjectReadIn = null; // Create empty StudentManager object to store read in object
+		StudentManager studentManagerObject = null;
 
-		try {
-			studentManagerObjectByteFile = new File(pathToFile);
-			fisFromStudentManagerObjectByteFile = new FileInputStream(studentManagerObjectByteFile);
-			oisFromStudentManagerObjectByteFile = new ObjectInputStream(fisFromStudentManagerObjectByteFile);
-			studentManagerObjectReadIn = (StudentManager) oisFromStudentManagerObjectByteFile.readObject();
-		} catch (NullPointerException npExc) {
-			npExc.printStackTrace();
-		} catch (FileNotFoundException fnfExc) {
-			fnfExc.printStackTrace();
-		} catch (SecurityException secExc) {
-			secExc.printStackTrace();
-		} catch (StreamCorruptedException scExc) {
-			scExc.printStackTrace();
-		} catch (InvalidClassException icExc) {
-			icExc.printStackTrace();
-		} catch (OptionalDataException odExc) {
-			odExc.printStackTrace();
-		} catch (IOException IOExc) {
-			IOExc.printStackTrace();
-		} catch (ClassNotFoundException cnfExc) {
-			cnfExc.printStackTrace();
-		} finally {
-			try {
-				// Close ObjectOutputStream
-				oisFromStudentManagerObjectByteFile.close();
-				// Close FileOutputStream
-				fisFromStudentManagerObjectByteFile.close();
-			} catch (NullPointerException npExc) {
-				System.out.println("ERROR: Could not close the ObjectOutputStream or FileOutputStream!");
-				npExc.printStackTrace();
-			} catch (IOException ioExc) {
-				ioExc.printStackTrace();
-			} // End catch
-		} // End finally
-		return studentManagerObjectReadIn; // Returns null if no object is read in.
+		// Use try-with-resources to void the need to close the streams in a finally block.
+		try (FileInputStream fileInputStreamFromStudentManagerObjectFile = new FileInputStream(pathToFile);
+				ObjectInputStream objectInputStreamfromStudentManagerObjectFile = new ObjectInputStream(
+						fileInputStreamFromStudentManagerObjectFile)) {
+			// Read in object from file
+			studentManagerObject = (StudentManager) objectInputStreamfromStudentManagerObjectFile.readObject();
+		} catch (Exception e) {
+			System.out.println("ERROR: An error occurred while reading the StudentManager object from file!");
+			e.printStackTrace();
+		}
+		// Returns null if no object is read in or an exception occurs.
+		return studentManagerObject; 
 	}
 
 } // End Class
