@@ -5,7 +5,6 @@ public class Main {
         // Create student list
         StudentManager studentManagerObject1 = new StudentManager();
 
-
         boolean test = studentManagerObject1.getStudentList().contains(null);
         System.out.println(test);
 
