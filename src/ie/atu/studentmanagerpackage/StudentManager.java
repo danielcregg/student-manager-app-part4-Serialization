@@ -13,9 +13,7 @@ import java.io.InvalidClassException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.io.Serializable;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,28 +144,38 @@ public class StudentManager implements Serializable {
 
 	// Update student name
 	public boolean updateStudentName(String studentId, String newName) {
-		// If the inputted Student ID and new name are valid...
-		if (Student.studentIdIsValid(studentId) && Student.firstNameIsValid(newName)) {
-			// Search for student object with on the list with the inputted ID
-			Student studentToUpdate = findStudentObjectByID(studentId);
-			// If the student object is found i.e. NOT equal to null...
-			if (studentToUpdate != null) {
-				// Save the current students name
-				String currentName = studentToUpdate.getFirstName();
-				// Check if the currentName is equal to the newName
-				if (currentName.equals(newName)) {
-					System.out.println("Student name is already " + newName + "! No update made to name.");
-				} else {
-					// else if the currentName is NOT equal to the newName, update the name
-					studentToUpdate.setFirstName(newName);
-					System.out.println("Student name changed from " + currentName + " to " + newName + "!");
-					return true;
-				}
-			}
+		// Validate the student ID and new name using the static methods in the Student class
+		if (!Student.studentIdIsValid(studentId) || !Student.firstNameIsValid(newName)) {
+			// If either the student ID or the new name is invalid, throw an IllegalArgumentException
+			throw new IllegalArgumentException("Invalid student ID or name");
 		}
-		// If student ID is invalid or new name is invalid
-		System.out.println("Student name NOT updated!");
-		return false;
+
+		// If both the student ID and the new name are valid, find the student with the given ID
+		Student studentToUpdate = findStudentObjectByID(studentId);
+
+		// If a student with the given ID is not found...
+		if (studentToUpdate == null) {
+			// Print a message and return false
+			System.out.println("Student not found");
+			return false;
+		}
+
+		// Save the current name of the student
+		String currentName = studentToUpdate.getFirstName();
+
+		// If the current name is the same as the new name...
+		if (currentName.equals(newName)) {
+			// Print a message and return false
+			System.out.println("Student name is already " + newName + "! No update made to name.");
+			return false;
+		}
+
+		// If the current name is different from the new name, update the name
+		studentToUpdate.setFirstName(newName);
+		// Print a message indicating the name has been updated
+		System.out.println("Student name changed from " + currentName + " to " + newName + "!");
+		// Return true indicating the name was successfully updated
+		return true;
 	}
 
 	// Show total number of Students in List
@@ -184,54 +192,6 @@ public class StudentManager implements Serializable {
 		}
 		System.out.println("========================");
 	}
-
-	// Read student details from file
-	public void readStudentDataFromCSVFile(String pathToStudentCSVFile) {
-		File studentCSVFile = null;
-		FileReader studentCSVFileReader = null;
-		BufferedReader bufferedStudentCSVFileReader = null;
-		String bufferData = null; // Used to store lines of data we read from the buffer
-
-		// Create a file reader
-		try {
-			studentCSVFile = new File(pathToStudentCSVFile);
-			studentCSVFileReader = new FileReader(studentCSVFile);
-			// Add a buffer to the file reader
-			bufferedStudentCSVFileReader = new BufferedReader(studentCSVFileReader);
-			// Read first line of file and discard it. It contains column headers.
-			bufferedStudentCSVFileReader.readLine();
-
-			while ((bufferData = bufferedStudentCSVFileReader.readLine()) != null) {
-				// System.out.println(bufferData);
-				String[] studentFieldValues = bufferData.split(",");
-				// System.out.println(Arrays.toString(studentFieldValues));
-				String studentId = studentFieldValues[0];
-				String firstName = studentFieldValues[1];
-				int age = Integer.parseInt(studentFieldValues[2]);
-				this.addStudentToList(studentId, firstName, age); // Add student to the studentList
-			}
-			System.out.println("Student data read from CSV file located at " + pathToStudentCSVFile);
-		} catch (NullPointerException npExc) {
-			System.err.println("ERROR: Students NOT saved to file!");
-			npExc.printStackTrace();
-		} catch (FileNotFoundException fnfExc) {
-			System.err.println("ERROR: Students NOT saved to file!");
-			fnfExc.printStackTrace();
-		} catch (IOException IOExc) {
-			System.err.println("ERROR: Students NOT saved to file!");
-			IOExc.printStackTrace();
-		} finally {
-			try {
-				// Flushes buffer, which transfers buffer data to the file, then closes buffer.
-				bufferedStudentCSVFileReader.close();
-				// Close the file reader stream
-				studentCSVFileReader.close();
-			} catch (IOException IOExc) {
-				System.err.println("ERROR: Could not close the buffer file reader!");
-				IOExc.printStackTrace();
-			} // End catch
-		} // End finally
-	} // End read method
 
 	// Write student details to file
 	public void writeStudentDataToCSVFile(String pathToStudentCSVFile) {
@@ -278,15 +238,34 @@ public class StudentManager implements Serializable {
 		} // End finally
 	} // End Save method
 
+	public void readStudentDataFromCSVFile(String pathToStudentCSVFile) {
+		// Use try-with-resources to void the need to close the streams in a finally
+		try (BufferedReader bufferedStudentCSVFileReader = new BufferedReader(new FileReader(pathToStudentCSVFile))) {
+			// Read first line of file and discard it. It contains column headers.
+			bufferedStudentCSVFileReader.readLine();
+			String bufferData; // Variable to store each line of data read from file
+			// Read each line of data from file and add it to the studentList
+			while ((bufferData = bufferedStudentCSVFileReader.readLine()) != null) {
+				String[] studentFieldValues = bufferData.split(",");
+				String studentId = studentFieldValues[0];
+				String firstName = studentFieldValues[1];
+				int age = Integer.parseInt(studentFieldValues[2]);
+				this.addStudentToList(studentId, firstName, age); // Add student to the studentList
+			}
+			System.out.println("Student data read from CSV file located at " + pathToStudentCSVFile);
+		} catch (IOException e) {
+			System.err.println("ERROR: An error occurred while reading the student data from the file: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
 	// Method to serialize the Student Manager Object
 	public void writeStudentManagerObjectToFile(String pathToFile) {
-		File studentManagerObjectFile = null;
+		File studentManagerObjectFile = new File(pathToFile);
 		FileOutputStream fileOutputStreamToStudentManagerObjectFile = null;
 		ObjectOutputStream objectOutputStreamToStudentManagerObjectFile = null;
 
 		try {
-			// Create file object
-			studentManagerObjectFile = new File(pathToFile);
 			// Create file output stream from file object
 			fileOutputStreamToStudentManagerObjectFile = new FileOutputStream(studentManagerObjectFile);
 			// Create object output stream from file output stream
@@ -323,7 +302,8 @@ public class StudentManager implements Serializable {
 	public StudentManager readStudentManagerObjectFromFile(String pathToFile) {
 		StudentManager studentManagerObject = null;
 
-		// Use try-with-resources to void the need to close the streams in a finally block.
+		// Use try-with-resources to void the need to close the streams in a finally
+		// block.
 		try (FileInputStream fileInputStreamFromStudentManagerObjectFile = new FileInputStream(pathToFile);
 				ObjectInputStream objectInputStreamfromStudentManagerObjectFile = new ObjectInputStream(
 						fileInputStreamFromStudentManagerObjectFile)) {
@@ -334,7 +314,7 @@ public class StudentManager implements Serializable {
 			e.printStackTrace();
 		}
 		// Returns null if no object is read in or an exception occurs.
-		return studentManagerObject; 
+		return studentManagerObject;
 	}
 
 } // End Class
