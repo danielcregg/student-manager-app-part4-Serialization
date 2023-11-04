@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StudentManager implements Serializable {
 
@@ -109,6 +110,13 @@ public class StudentManager implements Serializable {
 				System.out.println(studentObject.toString());
 			}
 		}
+	}
+
+	public List<Student> getStudentsByAge(int age) {
+		// Use Java 8 Streams to filter the list of students by age
+		return studentList.stream()
+			.filter(student -> student.getAge() == age)
+			.collect(Collectors.toList());
 	}
 
 	public void findStudentsByFirstNameAndAge(String firstName, int age) {

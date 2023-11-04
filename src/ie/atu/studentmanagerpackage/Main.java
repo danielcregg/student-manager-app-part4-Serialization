@@ -17,6 +17,8 @@ public class Main {
         studentManagerObject1.writeStudentDataToCSVFile("./resources/students.csv");
 
         studentManagerObject1.findStudentsByAge(20);
+        //studentManagerObject1.getStudentsByAge(20).forEach(x -> System.out.println(x));
+        //studentManagerObject1.getStudentsByAge(20).forEach(System.out::println); // returns a list of students with age 20
         studentManagerObject1.findStudentsByName("Sarah");
         studentManagerObject1.findStudentsByFirstNameAndAge("Sarah", 20);
         studentManagerObject1.findStudentsByAgeRange(21, 50);
