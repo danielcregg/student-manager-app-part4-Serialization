@@ -103,7 +103,7 @@ public class Student implements Serializable {
 	// Method to print students name and age
 	@Override
 	public String toString() {
-		return this.studentId + "," + this.firstName + "," + this.age;
+		return "Student ID: " + this.studentId + ", Name: " + this.firstName + ", Age: " + this.age;
 	}
 
 } // End of Student class
