@@ -34,7 +34,7 @@ public class StudentManager implements Serializable {
 		this.studentList = new ArrayList<>();
 	}
 
-	// Create second constructor which takes arraylist as input
+	// Constructor (Paramiterised) - takes student list as input
 	public StudentManager(List<Student> studentList) {
 		this.studentList = studentList;
 	}
@@ -44,21 +44,28 @@ public class StudentManager implements Serializable {
 		return this.studentList;
 	}
 
-	// Setter
 	public void setStudentList(List<Student> studentList) {
+		if (studentList == null || studentList.isEmpty()) {
+			throw new IllegalArgumentException("Student list cannot be null or empty");
+		}
 		this.studentList = studentList;
 	}
 
 	// Add student to list
 	public boolean addStudentToList(String studentId, String name, int age) {
-		// Check student details are vaild and if student is NOT already on list
-		if (Student.isValid(studentId, name, age) && !isOnList(studentId)) {
-			// Create student object with valid details and add student to the list
-			Student newStudent = new Student(studentId, name, age);
-			return this.studentList.add(newStudent);
+		try {
+			// Check student details are valid
+			Student.validate(studentId, name, age);
+			// Check if student is already on student list
+			if (!studentList.contains(findStudentObjectByID(studentId))) {
+				// Create student object with valid details and add student to the list
+				Student newStudent = new Student(studentId, name, age);
+				return this.studentList.add(newStudent);
+			}
+		} catch (IllegalArgumentException e) {
+			// If student details are invalid or if student is already on list print an error message
+			System.out.println("Student with ID " + studentId + " could not be added to list: " + e.getMessage());
 		}
-		// If student details are invalid or if student is already on list return false
-		System.out.println("Student with ID " + studentId + " could not be added to list!");
 		return false;
 	}
 
@@ -81,11 +88,6 @@ public class StudentManager implements Serializable {
 		// If no match is found return null
 		System.out.println("Student object with ID = " + studentId + " was NOT found on list!");
 		return null;
-	}
-
-	// Returns true if student on list
-	public boolean isOnList(String studentId) {
-		return studentList.contains(findStudentObjectByID(studentId));
 	}
 
 	public void findStudentsByName(String firstName) {

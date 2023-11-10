@@ -37,72 +37,67 @@ public class Student implements Serializable {
 	}
 
 	public void setStudentId(String studentId) {
-		// Check if student ID is not valid	and throw exception if it is.
-		if (!studentIdIsValid(studentId)) {
-			throw new IllegalArgumentException("Invalid student ID");
-		}
-		this.studentId = studentId;
-	}
+        // Validate student ID directly in the setter
+        if (!studentIdIsValid(studentId)) {
+            throw new IllegalArgumentException("Invalid student ID");
+        }
+        this.studentId = studentId;
+    }
 
-	public void setFirstName(String firstName) {
-		// Check if student ID is not valid	and throw exception if it is.
-		if (!firstNameIsValid(firstName)) {
-			throw new IllegalArgumentException("Invalid first name");
-		}
-		this.firstName = firstName;
-	}
-	
-	public void setAge(int age) {
-		// Check if student ID is not valid	and throw exception if it is.
-		if (!ageIsValid(age)) {
-			throw new IllegalArgumentException("Invalid age");
-		}
-		this.age = age;
-	}
+    public void setFirstName(String firstName) {
+        // Validate first name directly in the setter
+        if (!firstNameIsValid(firstName)) {
+            throw new IllegalArgumentException("Invalid first name");
+        }
+        this.firstName = firstName;
+    }
+
+    public void setAge(int age) {
+        // Validate age directly in the setter
+        if (!ageIsValid(age)) {
+            throw new IllegalArgumentException("Invalid age");
+        }
+        this.age = age;
+    }
 
 	// Check if student ID is valid
 	public static boolean studentIdIsValid(String studentId) {
-		// Check if student ID is valid
 		if (studentId == null) {
-			System.err.println("Student ID can not be null");
-			return false;
-		} else if (!(studentId.matches("G00\\d{6}"))) {
-			System.err.println("Student ID " + studentId + " does not match the format G00123456");
-			return false;
-		} else {
-			return true;
+			throw new IllegalArgumentException("Student ID cannot be null");
 		}
+		if (!studentId.matches("G00\\d{6}")) {
+			throw new IllegalArgumentException("Student ID " + studentId + " does not match the format G00123456");
+		}
+		return true;
 	}
 
-	// Check if student ID is valid
+	// Check if first name is valid
 	public static boolean firstNameIsValid(String firstName) {
 		if (firstName == null) {
-			System.err.println("First name can not be null");
-			return false;
-		} else if (firstName.length() < 2) {
-			System.err.println("First name must be at least 2 characters long");
-			return false;
-		} else if (!firstName.matches("[a-zA-Z]+")) {
-			System.err.println("First name must conatin Upper and lover case letters only");
-			return false;
-		} else {
-			return true;
+			throw new IllegalArgumentException("First name cannot be null");
 		}
+		if (firstName.length() < 2) {
+			throw new IllegalArgumentException("First name must be at least 2 characters long");
+		}
+		if (!firstName.matches("[a-zA-Z]+")) {
+			throw new IllegalArgumentException("First name must contain upper and lower case letters only");
+		}
+		return true;
 	}
 
-	// Check if student ID is valid
+	// Check if age is valid
 	public static boolean ageIsValid(int age) {
 		if (age < 16 || age > 130) {
-			System.err.println("Student must be at least 16 years old and less than 130 years old");
-			return false;
-		} else {
-			return true;
+			throw new IllegalArgumentException("Student must be at least 16 years old and less than 130 years old");
 		}
+		return true;
 	}
 
 	// Check if student details are valid
-	public static boolean isValid(String studentId, String firstName, int age) {
-		return studentIdIsValid(studentId) && firstNameIsValid(firstName) && ageIsValid(age);
+	public static void validate(String studentId, String firstName, int age) {
+		studentIdIsValid(studentId);
+		firstNameIsValid(firstName);
+		ageIsValid(age);
 	}
 
 	// Method to print students name and age
