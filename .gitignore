@@ -46,6 +46,9 @@ target/
 # macOS
 .DS_Store
 
+# Serialized files
+*.ser
+
 # Windows
 Thumbs.db
 desktop.ini

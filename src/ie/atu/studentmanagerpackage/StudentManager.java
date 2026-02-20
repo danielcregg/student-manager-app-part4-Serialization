@@ -34,7 +34,7 @@ public class StudentManager implements Serializable {
 		this.studentList = new ArrayList<>();
 	}
 
-	// Constructor (Paramiterised) - takes student list as input
+	// Constructor (Parameterized) - takes student list as input
 	public StudentManager(List<Student> studentList) {
 		this.studentList = studentList;
 	}
@@ -247,7 +247,7 @@ public class StudentManager implements Serializable {
 				npExc.printStackTrace();
 			} catch (IOException ioExc) {
 				ioExc.printStackTrace();
-			} // End catchEnd catch
+			} // End catch
 		} // End finally
 	} // End Save method
 

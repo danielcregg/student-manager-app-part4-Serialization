@@ -19,6 +19,6 @@
         "docs": false,
         ".gitignore": true,
         ".vscode": false,
-        "**/*.gitpod*": false,
+        "**/*.gitpod*": false
       }
 }
